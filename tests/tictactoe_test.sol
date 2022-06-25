@@ -46,6 +46,18 @@ contract testSuite {
             Assert.ok(false, "Unexpected failure.");
         }
     }
+    
+    function checkJoinPlayer1AsPlayer2() public {
+        TicTacToe ttt = new TicTacToe();
+        uint64 game_id_1 = ttt.Create(TestsAccounts.getAccount(0));
+        try ttt.Join(game_id_1, TestsAccounts.getAccount(0)) /*returns (TicTacToe.Game memory g)*/ {
+            Assert.ok(false, "Join should fail.");
+        } catch Error(string memory reason) {
+            Assert.equal(reason, "Player1 cannot be Player2.", "Failed with unexpected reason");
+        } catch (bytes memory /*lowLevelData*/) {
+            Assert.ok(false, "Unexpected failure.");
+        }
+    }
 
     function checkJoinGamePlayer1Turn() public {
         TicTacToe ttt = new TicTacToe();

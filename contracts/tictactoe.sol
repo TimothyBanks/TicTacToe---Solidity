@@ -44,6 +44,11 @@ contract TicTacToe {
         _;
     }
 
+    modifier notPlayer1(uint64 game, address player) {
+        require(games[game].p1 != player, "Player1 cannot be Player2.");
+        _;
+    }
+
     modifier myTurn(uint64 game, address player) {
         Game memory g = games[game];
         require(g.p1 == player || g.p2 == player, "Invalid player.");
@@ -74,7 +79,7 @@ contract TicTacToe {
         return gameCount - 1;
     }
 
-    function Join(uint64 game, address player) public validGame(game) gameAvailable(game) {
+    function Join(uint64 game, address player) public validGame(game) gameAvailable(game) notPlayer1(game, player) {
         Game storage g = games[game];
         g.p2 = player;
         g.state = GameState.Active;
